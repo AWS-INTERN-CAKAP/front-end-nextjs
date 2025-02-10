@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Project Documentation
 
-## Getting Started
+This project is built using **Next.js**, a React framework for building fast, scalable web applications. This guide provides you with the steps to set up and start your Next.js project, along with some basic explanations and resources for learning more.
 
-First, run the development server:
+## Prerequisites
+
+Before you start, ensure that you have the following installed on your system:
+
+- **Node.js**: Next.js requires Node.js to run. You can download it from [nodejs.org](https://nodejs.org/).
+- **Package Manager**: You can use npm (default with Node.js), yarn, pnpm, or bun as a package manager.
+
+### Installing Next.js with `create-next-app`
+
+To get started with Next.js, you need to create a new project. The easiest way to do this is by using `create-next-app`, which sets up a new Next.js application for you with all the necessary configurations.
+
+Run the following commands to create a new Next.js app:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Using npx (npm 5.2+)
+npx create-next-app@latest your-project-name
+# or using yarn
+yarn create next-app your-project-name
+# or using pnpm
+pnpm create next-app your-project-name
+# or using bun
+bun create next-app your-project-name
