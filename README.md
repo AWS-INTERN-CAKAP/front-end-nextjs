@@ -17,10 +17,67 @@ Run the following commands to create a new Next.js app:
 
 ```bash
 # Using npx (npm 5.2+)
-npx create-next-app@latest your-project-name
+npx create-next-app@latest front-end-nextjs
 # or using yarn
-yarn create next-app your-project-name
+yarn create next-app front-end-nextjs
 # or using pnpm
-pnpm create next-app your-project-name
+pnpm create next-app front-end-nextjs
 # or using bun
-bun create next-app your-project-name
+bun create next-app front-end-nextjs
+
+### Project Structure
+The project structure for this Next.js application is as follows:
+
+```
+front-end-nextjs/
+├── .gitignore
+├── .env
+├── index.html
+├── next.config.ts
+├── package.json
+├── postcss.config.mjs
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+├── src/
+│   ├── App.tsx
+│   ├── components/
+│   │   └── PrivateRoute.tsx
+│   ├── contexts/
+│   │   └── AuthContext.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   ├── pages/
+│   │   ├── Dashboard.tsx
+│   │   ├── Login.tsx
+│   │   └── Register.tsx
+│   ├── services/
+│   │   └── api.ts
+│   ├── types/
+│   │   └── index.ts
+│   └── vite-env.d.ts
+```
+### Getting Started
+### 1. Install Dependencies
+cd your-project-name
+
+Then, install the project dependencies by running:
+
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+
+### 2. Start the Development Server
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
