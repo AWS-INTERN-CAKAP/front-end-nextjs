@@ -3,17 +3,21 @@ import { Plus, Edit2, Trash2 } from 'lucide-react';
 import { getPosts, createPost, updatePost, deletePost } from '../services/api';
 import { Post } from '../types';
 import toast from 'react-hot-toast';
+import Select from 'react-select';
 
 export const Dashboard = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState<Post | null>(null);
-  const [formData, setFormData] = useState({ title: '', content: '' });
+  const [formData, setFormData] = useState<{ title: string; content: string; tags: string[] }>({ title: '', content: '', tags: [] });
+  const [tagOptions, setTagOptions] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
     loadPosts();
+    loadTags(); // Load tags from API or other source
   }, []);
 
+  // Load posts from API
   const loadPosts = async () => {
     try {
       const data = await getPosts();
@@ -21,6 +25,24 @@ export const Dashboard = () => {
     } catch {
       toast.error('Failed to load posts');
     }
+  };
+
+  // Load tags from API or dynamic source
+  const loadTags = async () => {
+    try {
+      // Example: fetch tags from an API or any other dynamic data source
+      const tags = await fetchTagsFromAPI();
+      setTagOptions(tags.map((tag: string) => ({ value: tag, label: tag })));
+    } catch {
+      toast.error('Failed to load tags');
+    }
+  };
+
+  // Simulating fetching tags from an API
+  const fetchTagsFromAPI = async () => {
+    return new Promise<string[]>((resolve) =>
+      setTimeout(() => resolve([]), 1000)
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +57,7 @@ export const Dashboard = () => {
       }
       setIsModalOpen(false);
       setCurrentPost(null);
-      setFormData({ title: '', content: '' });
+      setFormData({ title: '', content: '', tags: [] });
       loadPosts();
     } catch {
       toast.error('Operation failed');
@@ -62,7 +84,7 @@ export const Dashboard = () => {
           <button
             onClick={() => {
               setCurrentPost(null);
-              setFormData({ title: '', content: '' });
+              setFormData({ title: '', content: '', tags: [] });
               setIsModalOpen(true);
             }}
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -81,7 +103,7 @@ export const Dashboard = () => {
                 <button
                   onClick={() => {
                     setCurrentPost(post);
-                    setFormData({ title: post.title, content: post.content });
+                    setFormData({ title: post.title, content: post.content, tags: post.tags || [] });
                     setIsModalOpen(true);
                   }}
                   className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
@@ -124,6 +146,21 @@ export const Dashboard = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     rows={4}
                     required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Tags</label>
+                  <Select
+                    isMulti
+                    options={tagOptions}
+                    value={formData.tags.map((tag) => ({ value: tag, label: tag }))}
+                    onChange={(selected) => {
+                      setFormData({
+                        ...formData,
+                        tags: selected.map((option: { value: string }) => option.value),
+                      });
+                    }}
+                    className="mt-1 block w-full"
                   />
                 </div>
                 <div className="flex justify-end space-x-3">
