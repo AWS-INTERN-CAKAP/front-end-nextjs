@@ -15,4 +15,5 @@ export interface Post {
   content: string;
   userId: number;
   createdAt: string;
+  tags?: string[];
 }
