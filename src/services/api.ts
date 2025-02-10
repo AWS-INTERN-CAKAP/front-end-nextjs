@@ -2,7 +2,7 @@ import axios from 'axios';
 import { LoginCredentials, Post } from '../types';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000', // Replace with your actual API URL
+  baseURL: 'Your_API_URL', // Replace with your actual API URL
 });
 
 // Add token to requests if it exists
