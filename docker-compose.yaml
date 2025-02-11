@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Ensure you have the Dockerfile for the Next.js app with Vite
+    ports:
+      - "5173:5173"  # Port for Vite's development server
+    environment:
+      VITE_API_URL: http://your-backend-api-url  # Replace with your backend API URL (Laravel or Golang)
+    networks:
+      - myapp-network
+    volumes:
+      - .:/app  # Mount the application folder into the container
+    command: ["npm", "run", "dev"]  # Start the Next.js dev server
+    hostname: "vite-app"
+    expose:
+      - "5173"  # Port exposed by Vite
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Allow accessing the host machine from the container
+
+networks:
+  myapp-network:
+    driver: bridge
