@@ -45,10 +45,6 @@ front-end-nextjs/
 ├── vite.config.ts
 ├── src/
 │   ├── App.tsx
-│   ├── components/
-│   │   └── PrivateRoute.tsx
-│   ├── contexts/
-│   │   └── AuthContext.tsx
 │   ├── index.css
 │   ├── main.tsx
 │   ├── pages/
