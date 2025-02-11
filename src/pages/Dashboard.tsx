@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-import { getPosts, createPost, updatePost, deletePost } from '../services/api';
+import { getPosts, createPost, updatePost, deletePost, createCategory } from '../services/api';
 import { Post } from '../types';
 import toast from 'react-hot-toast';
 import Select from 'react-select';
@@ -9,12 +9,15 @@ export const Dashboard = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState<Post | null>(null);
-  const [formData, setFormData] = useState<{ title: string; content: string; tags: string[] }>({ title: '', content: '', tags: [] });
-  const [tagOptions, setTagOptions] = useState<{ value: string; label: string }[]>([]);
+  const [formData, setFormData] = useState<{ title: string; content: string; categories: number[] }>({
+    title: '', content: '', categories: []
+  });
+  const [categoryOptions, setCategoryOptions] = useState<{ value: number; label: string }[]>([]);
+  const [newCategory, setNewCategory] = useState<string>('');
 
   useEffect(() => {
     loadPosts();
-    loadTags(); // Load tags from API or other source
+    loadCategories();
   }, []);
 
   // Load posts from API
@@ -27,37 +30,57 @@ export const Dashboard = () => {
     }
   };
 
-  // Load tags from API or dynamic source
-  const loadTags = async () => {
+  const loadCategories = async () => {
     try {
-      // Example: fetch tags from an API or any other dynamic data source
-      const tags = await fetchTagsFromAPI();
-      setTagOptions(tags.map((tag: string) => ({ value: tag, label: tag })));
+      const response = await fetch('/api/categories');  // Sesuaikan dengan endpoint backend untuk kategori
+      const categories = await response.json();
+      setCategoryOptions(
+        categories.map((category: { id: number; name: string }) => ({
+          value: category.id,
+          label: category.name
+        }))
+      );
     } catch {
-      toast.error('Failed to load tags');
+      toast.error('Failed to load categories');
     }
   };
 
-  // Simulating fetching tags from an API
-  const fetchTagsFromAPI = async () => {
-    return new Promise<string[]>((resolve) =>
-      setTimeout(() => resolve([]), 1000)
-    );
+  const handleCategoryCreate = async () => {
+    if (!newCategory) {
+      toast.error('Please enter a category name');
+      return;
+    }
+    try {
+      // Kirimkan hanya { name: newCategory }
+      await createCategory({ name: newCategory });
+      setNewCategory('');
+      loadCategories();  // Reload kategori setelah menambah
+      toast.success('Category created successfully');
+    } catch {
+      toast.error('Failed to create category');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const categoryIds = formData.categories;
+      const { categories, ...rest } = formData;  // Pisahkan kategori dari formData sebelum dikirim
+
       if (currentPost) {
-        await updatePost(currentPost.id, formData);
+        // Mengupdate post yang sudah ada
+        await updatePost(currentPost.id, { ...rest, category_ids: categoryIds });
         toast.success('Post updated successfully');
       } else {
-        await createPost(formData);
+        // Membuat post baru
+        await createPost({
+          ...rest, category_ids: categoryIds, categories: []  // Kategori sudah dikelola dalam category_ids
+        });
         toast.success('Post created successfully');
       }
       setIsModalOpen(false);
       setCurrentPost(null);
-      setFormData({ title: '', content: '', tags: [] });
+      setFormData({ title: '', content: '', categories: [] });
       loadPosts();
     } catch {
       toast.error('Operation failed');
@@ -84,7 +107,7 @@ export const Dashboard = () => {
           <button
             onClick={() => {
               setCurrentPost(null);
-              setFormData({ title: '', content: '', tags: [] });
+              setFormData({ title: '', content: '', categories: [] });
               setIsModalOpen(true);
             }}
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -103,7 +126,11 @@ export const Dashboard = () => {
                 <button
                   onClick={() => {
                     setCurrentPost(post);
-                    setFormData({ title: post.title, content: post.content, tags: post.tags || [] });
+                    setFormData({
+                      title: post.title,
+                      content: post.content,
+                      categories: post.categories.map((category) => category.id) || [],
+                    });
                     setIsModalOpen(true);
                   }}
                   className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
@@ -149,19 +176,35 @@ export const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Tags</label>
+                  <label className="block text-sm font-medium text-gray-700">Categories</label>
                   <Select
                     isMulti
-                    options={tagOptions}
-                    value={formData.tags.map((tag) => ({ value: tag, label: tag }))}
-                    onChange={(selected) => {
-                      setFormData({
-                        ...formData,
-                        tags: selected.map((option: { value: string }) => option.value),
-                      });
-                    }}
+                    options={categoryOptions}
+                    value={categoryOptions.filter(option => formData.categories.includes(option.value))}
+                    onChange={(selected) => setFormData({
+                      ...formData,
+                      categories: selected ? selected.map(option => option.value) : [],
+                    })}
                     className="mt-1 block w-full"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Create New Category</label>
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCategoryCreate}
+                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
                 <div className="flex justify-end space-x-3">
                   <button
