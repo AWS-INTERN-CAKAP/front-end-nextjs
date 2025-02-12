@@ -6,7 +6,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'API_HERE', // Backend Laravel
+        target: 'API_HERE', // Backend Here
         changeOrigin: true,
         secure: false,
       },
