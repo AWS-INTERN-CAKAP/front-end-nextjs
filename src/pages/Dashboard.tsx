@@ -32,7 +32,7 @@ export const Dashboard = () => {
 
   const loadCategories = async () => {
     try {
-      const response = await fetch('/api/categories');  // Sesuaikan dengan endpoint backend untuk kategori
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`);  // Sesuaikan dengan endpoint backend untuk kategori
       const categories = await response.json();
       setCategoryOptions(
         categories.map((category: { id: number; name: string }) => ({

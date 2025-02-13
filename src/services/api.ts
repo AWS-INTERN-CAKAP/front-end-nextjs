@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Post } from '../types';
 
 const api = axios.create({
-  baseURL: 'API_URL_HERE', // URL BACKEND
+  baseURL: import.meta.env.VITE_API_URL + '/api', // URL BACKEND
 });
 
 // Login and Register API

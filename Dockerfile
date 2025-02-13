@@ -16,9 +16,9 @@ COPY . .
 # Set environment variable for Vite to be accessible via IP or hostname
 ENV HOST=0.0.0.0
 
-# Build and run the app
-RUN npm run build
+# run the app
+
 CMD ["npm", "run", "dev"]
 
 # Expose port used by Vite
-EXPOSE 5173
+EXPOSE 3000
