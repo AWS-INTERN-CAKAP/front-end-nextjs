@@ -15,7 +15,7 @@ export const Login = () => {
 
         try {
             // Kirim permintaan login ke API backend
-            const response = await axios.post('/api/login', { email, password });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, { email, password });
 
             // Cek jika login berhasil (misalnya dengan status 200 atau response yang berisi token)
             if (response.status === 200) {
